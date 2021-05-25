@@ -112,23 +112,23 @@ main#main.full-screen-mode .plagiarism-result-cont {
 }
 
 .code-cont {
-    position:relative;
+    position: relative;
     height: inherit;
-    overflow-y:hidden;
+    overflow-y: hidden;
 }
 
 .code-cont .sub {
     height: 100%;
-    width:100%;
+    width: 100%;
     display: flex;
 }
 
 .code-cont .sub-item {
-    line-height:1.5em;
-    overflow:auto;
-    padding:5px;
+    line-height: 1.5em;
+    overflow: auto;
+    padding: 5px;
     border: 2px solid #555;
-    background:white;
+    background: white;
     min-width: 100px;
 }
 
