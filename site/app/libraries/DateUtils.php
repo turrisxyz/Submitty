@@ -128,7 +128,7 @@ class DateUtils {
      * Gets a json which contains the current server time broken up into specific fields
      * Formatting the data in this manner makes it easier to work with when instantiating javascript Date() objects
      *
-     * @param $core Core core
+     * @param Core $core
      * @return array
      */
     public static function getServerTimeJson(Core $core): array {

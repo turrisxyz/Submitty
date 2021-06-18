@@ -244,11 +244,6 @@ parameters:
 			path: app/controllers/student/SubmissionController.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$core Core core\\)\\: Unexpected token \"\\$core\", expected type at offset 230$#"
-			count: 1
-			path: app/libraries/DateUtils.php
-
-		-
 			message: "#^Call to an undefined method Throwable\\:\\:getDetails\\(\\)\\.$#"
 			count: 1
 			path: app/libraries/ExceptionHandler.php
