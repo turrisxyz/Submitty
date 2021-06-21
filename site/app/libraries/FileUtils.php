@@ -143,10 +143,6 @@ class FileUtils {
      * Given a directory, gets the path of all files in that directory and its
      * subdirectories (recursively), trimming the first $path_length characters
      * off the string.
-     *
-     * @param string $search_path
-     * @param int $path_length
-     * @return array
      */
     public static function getAllFilesTrimSearchPath(string $search_path, int $path_length): array {
         return array_map(function ($entry) use ($path_length) {
@@ -185,12 +181,12 @@ class FileUtils {
      * wanted).
      *
      * @param string $dir
-     * @param int $mode
-     * @param bool $recursive
+     * @param int    $mode
+     * @param bool   $recursive
      *
      * @return bool
      */
-    public static function createDir(string $dir, bool $recursive = false, int $mode = null): bool {
+    public static function createDir($dir, $recursive = false, $mode = null) {
         $return = true;
         if (!is_dir($dir)) {
             if (file_exists($dir)) {
@@ -210,12 +206,12 @@ class FileUtils {
     }
 
     /**
-     * @param string $path
-     * @param int $mode
+     * @param $path
+     * @param $mode
      *
      * @return bool
      */
-    public static function recursiveChmod(string $path, int $mode): bool {
+    public static function recursiveChmod($path, $mode) {
         $dir = new \FilesystemIterator($path);
         $files = [];
         foreach ($dir as $item) {
@@ -240,7 +236,7 @@ class FileUtils {
      *
      * @return array
      */
-    public static function getAllDirs($path): array {
+    public static function getAllDirs($path) {
         $disallowed_folders = [".", "..", ".svn", ".git", ".idea", "__macosx"];
         $return = [];
         if (is_dir($path)) {
@@ -317,7 +313,7 @@ class FileUtils {
      *
      * @return int
      */
-    public static function getZipSize($filename): int {
+    public static function getZipSize($filename) {
         $size = 0;
         $zip = zip_open($filename);
         if (is_resource($zip)) {
@@ -330,10 +326,10 @@ class FileUtils {
     }
 
     /**
-     * @param string $zipname
+     * @param $zipname
      * @return bool
      */
-    public static function checkFileInZipName($zipname): bool {
+    public static function checkFileInZipName($zipname) {
         $zip = zip_open($zipname);
         if (is_resource(($zip))) {
             while ($inner_file = zip_read($zip)) {
@@ -353,7 +349,7 @@ class FileUtils {
      * @param string $filename
      * @return bool
      */
-    public static function isValidFileName($filename): bool {
+    public static function isValidFileName($filename) {
         if (!is_string($filename)) {
             return false;
         }
@@ -376,9 +372,6 @@ class FileUtils {
     /**
      * Given an image path, validates that the mime type of the file is "image"
      * and its subtype is one of our allowed subtypes
-     *
-     * @param string $image_path
-     * @return bool
      */
     public static function isValidImage(string $image_path): bool {
         [$mime_type, $mime_subtype] = explode('/', mime_content_type($image_path), 2);
@@ -396,7 +389,7 @@ class FileUtils {
      *
      * @return string
      */
-    public static function joinPaths(): string {
+    public static function joinPaths() {
         $paths = [];
 
         foreach (func_get_args() as $arg) {
@@ -416,9 +409,6 @@ class FileUtils {
      * extension will get the content type "text/x-sh" even though just "text" would probably be more
      * appropriate. This is a weaker check for binary files than mime_content_type which does
      * some basic analysis of the actual file to determine the information as opposed to just the filename.
-     *
-     * @param string|null $filename
-     * @return string|null
      */
     public static function getContentType(?string $filename): ?string {
         if ($filename === null) {
@@ -505,7 +495,7 @@ class FileUtils {
      * @throws FileReadException Unable to either locate or read the file
      * @return bool true if any words in the $words array were found in the file, false otherwise
      */
-    public static function areWordsInFile(string $file, array $words): bool {
+    public static function areWordsInFile(string $file, array $words) {
         // Get file contents
         $file_contents = @file_get_contents($file);
 
