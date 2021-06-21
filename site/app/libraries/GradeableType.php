@@ -8,7 +8,7 @@ abstract class GradeableType {
     const NUMERIC_TEXT    = 2;
 
     /**
-     * @param int|\app\libraries\GradeableType $type
+     * @param int $type
      *
      * @return string
      */
@@ -26,7 +26,7 @@ abstract class GradeableType {
     }
 
     /**
-     * @param $string
+     * @param string $string
      *
      * @return int
      */
