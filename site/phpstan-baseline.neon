@@ -249,21 +249,6 @@ parameters:
 			path: app/libraries/ExceptionHandler.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$mode\\)\\: Unexpected token \"\\$mode\", expected type at offset 38$#"
-			count: 1
-			path: app/libraries/FileUtils.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$path\\)\\: Unexpected token \"\\$path\", expected type at offset 18$#"
-			count: 1
-			path: app/libraries/FileUtils.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$zipname\\)\\: Unexpected token \"\\$zipname\", expected type at offset 18$#"
-			count: 1
-			path: app/libraries/FileUtils.php
-
-		-
 			message: "#^PHPDoc tag @param for parameter \\$type with type app\\\\libraries\\\\GradeableType\\|int is not subtype of native type int\\.$#"
 			count: 1
 			path: app/libraries/GradeableType.php
