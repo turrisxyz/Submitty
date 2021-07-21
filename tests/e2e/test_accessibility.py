@@ -78,81 +78,87 @@ class TestAccessibility(BaseTestCase):
         self.urls_formatted = [url.format(self.semester, 'sample') for url in self.urls]
 
     def validatePages(self):
-        self.log_out()
-        self.log_in(user_id='instructor')
-        self.click_class('sample')
+        user_id_list = ['instructor', 'ta', 'grader', 'student']
 
-        # Enables the office hours queue
-        enableQueue(self)
+        for user_id in user_id_list:
+            self.log_out()
+            self.log_in(user_id=user_id)
+            self.click_class('sample')
 
-        with open(self.baseline_path, encoding="utf8") as f:
-            baseline = json.load(f)
+            # Enables the office hours queue
+            enableQueue(self)
 
-        self.maxDiff = None
-        for url_index, url in enumerate(self.urls_formatted):
-            with self.subTest(url=url):
-                foundErrors = []
-                foundErrorMessages = []
+            with open(self.baseline_path, encoding="utf8") as f:
+                baseline = json.load(f)
+
+            self.maxDiff = None
+            for url_index, url in enumerate(self.urls_formatted):
+                with self.subTest(url=url):
+                    foundErrors = []
+                    foundErrorMessages = []
+                    self.get(url=url)
+
+                    with tempfile.NamedTemporaryFile(mode='w+', suffix='.html') as tmp:
+                        tmp.write("<!DOCTYPE html>\n")
+                        tmp.write(self.driver.page_source)
+
+                        error_json = subprocess.check_output(["java", "-jar", "/usr/bin/vnu.jar", "--exit-zero-always", "--format", "json", tmp.name], stderr=subprocess.STDOUT)
+
+                        for error in json.loads(error_json)['messages']:
+                            # For some reason the test fails to detect this even though when you actually look at the rendered
+                            # pages this error is not there. So therefore the test is set to just ignore this error.
+                            skip_messages = [
+                            "Start tag seen without seeding a doctype first",
+                            "Possible misuse of “aria-label”",
+                            "The “date” input type is not supported in all browsers."
+                            ]
+                            skip_error = False
+                            for skip_msg in skip_messages:
+                                if error['message'].startswith(skip_msg):
+                                    skip_error = True
+                                    break
+                            if skip_error:
+                                continue
+
+                            if (self.urls[url_index] not in baseline or error['message'] not in baseline[self.urls[url_index]]) and error['message'] not in foundErrorMessages:
+                                foundErrorMessages.append(error['message'])
+                                clean_error = {
+                                    "error": error['message'].replace('\u201c', "'").replace('\u201d', "'").strip(),
+                                    "html extract": error['extract'].strip(),
+                                    "type": error['type'].strip()
+                                }
+                                foundErrors.append(clean_error)
+
+                        msg = f"\n{json.dumps(foundErrors, indent=4, sort_keys=True)}\nMore info can be found by using the w3 html validator. You can read more about it on submitty.org:\nhttps://validator.w3.org/#validate_by_input\nhttps://submitty.org/developer/interface_design_style_guide/web_accessibility#html-css-and-javascript"
+                        self.assertFalse(foundErrors != [], msg=msg)
+
+    def genBaseline(self):
+        user_id_list = ['instructor', 'ta', 'grader', 'student']
+
+        for user_id in user_id_list:
+            self.log_out()
+            self.log_in(user_id=user_id)
+            self.click_class('sample')
+
+            baseline = {}
+
+            for url_index, url in enumerate(self.urls_formatted):
                 self.get(url=url)
-
                 with tempfile.NamedTemporaryFile(mode='w+', suffix='.html') as tmp:
                     tmp.write("<!DOCTYPE html>\n")
                     tmp.write(self.driver.page_source)
 
                     error_json = subprocess.check_output(["java", "-jar", "/usr/bin/vnu.jar", "--exit-zero-always", "--format", "json", tmp.name], stderr=subprocess.STDOUT)
-
+                    baseline[self.urls[url_index]] = []
                     for error in json.loads(error_json)['messages']:
                         # For some reason the test fails to detect this even though when you actually look at the rendered
                         # pages this error is not there. So therefore the test is set to just ignore this error.
-                        skip_messages = [
-                        "Start tag seen without seeding a doctype first",
-                        "Possible misuse of “aria-label”",
-                        "The “date” input type is not supported in all browsers."
-                        ]
-                        skip_error = False
-                        for skip_msg in skip_messages:
-                            if error['message'].startswith(skip_msg):
-                                skip_error = True
-                                break
-                        if skip_error:
+                        if error['message'].startswith("Start tag seen without seeing a doctype first"):
+                            continue
+                        if error['message'].startswith("Possible misuse of “aria-label”"):
                             continue
 
-                        if (self.urls[url_index] not in baseline or error['message'] not in baseline[self.urls[url_index]]) and error['message'] not in foundErrorMessages:
-                            foundErrorMessages.append(error['message'])
-                            clean_error = {
-                                "error": error['message'].replace('\u201c', "'").replace('\u201d', "'").strip(),
-                                "html extract": error['extract'].strip(),
-                                "type": error['type'].strip()
-                            }
-                            foundErrors.append(clean_error)
-
-                    msg = f"\n{json.dumps(foundErrors, indent=4, sort_keys=True)}\nMore info can be found by using the w3 html validator. You can read more about it on submitty.org:\nhttps://validator.w3.org/#validate_by_input\nhttps://submitty.org/developer/interface_design_style_guide/web_accessibility#html-css-and-javascript"
-                    self.assertFalse(foundErrors != [], msg=msg)
-
-    def genBaseline(self):
-        self.log_out()
-        self.log_in(user_id='instructor')
-        self.click_class('sample')
-
-        baseline = {}
-
-        for url_index, url in enumerate(self.urls_formatted):
-            self.get(url=url)
-            with tempfile.NamedTemporaryFile(mode='w+', suffix='.html') as tmp:
-                tmp.write("<!DOCTYPE html>\n")
-                tmp.write(self.driver.page_source)
-
-                error_json = subprocess.check_output(["java", "-jar", "/usr/bin/vnu.jar", "--exit-zero-always", "--format", "json", tmp.name], stderr=subprocess.STDOUT)
-                baseline[self.urls[url_index]] = []
-                for error in json.loads(error_json)['messages']:
-                    # For some reason the test fails to detect this even though when you actually look at the rendered
-                    # pages this error is not there. So therefore the test is set to just ignore this error.
-                    if error['message'].startswith("Start tag seen without seeing a doctype first"):
-                        continue
-                    if error['message'].startswith("Possible misuse of “aria-label”"):
-                        continue
-
-                    if error['message'] not in baseline[self.urls[url_index]]:
-                        baseline[self.urls[url_index]].append(error['message'])
-        with open(self.baseline_path, 'w') as file:
-            json.dump(baseline, file, ensure_ascii=False, indent=4)
+                        if error['message'] not in baseline[self.urls[url_index]]:
+                            baseline[self.urls[url_index]].append(error['message'])
+            with open(self.baseline_path, 'w') as file:
+                json.dump(baseline, file, ensure_ascii=False, indent=4)
