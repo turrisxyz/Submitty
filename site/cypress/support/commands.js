@@ -36,6 +36,8 @@ Cypress.Commands.add('login', (username='instructor') => {
     cy.get('input[name=user_id]').type(username, {force: true});
     cy.get('input[name=password]').type(username, {force: true});
     cy.get('input[name=login]').click();
+    // check to see if we are logged in by looking to see if there are breadcrumbs
+    cy.get('#desktop_home_link').contains('Submitty')
 });
 
 /**
@@ -43,6 +45,8 @@ Cypress.Commands.add('login', (username='instructor') => {
 */
 Cypress.Commands.add('logout', () => {
     cy.get('#logout > .flex-line > .icon-title').click();
+    // check to make sure we logged out correctly
+    cy.get('#login-guest').should('be.visible')
 });
 
 /**
