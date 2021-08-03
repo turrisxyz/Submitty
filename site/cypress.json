@@ -4,5 +4,6 @@
     "*/*.spec.js",
 		"*.spec.js"
 	],
-	"pageLoadTimeout" : 120000
+	"pageLoadTimeout" : 120000,
+	"defaultCommandTimeout": 10000
 }

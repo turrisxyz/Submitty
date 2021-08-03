@@ -22,7 +22,10 @@ describe('Test cases revolving around course material uploading and access contr
     it('Should upload a file and be able to view and download it', () => {
         cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
         cy.get('#upload1').attachFile('file1.txt' , { subjectType: 'drag-n-drop' });
+
+        cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
         cy.get('#submit-materials').click();
+        cy.wait('@courseMaterialsAdded');
 
         cy.get('.file-viewer').contains('file1.txt');
 
@@ -45,7 +48,10 @@ describe('Test cases revolving around course material uploading and access contr
         cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
         cy.get('#input-provide-full-path').type('option1');
         cy.get('#upload1').attachFile('file1.txt' , { subjectType: 'drag-n-drop' });
+
+        cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
         cy.get('#submit-materials').click();
+        cy.wait('@courseMaterialsAdded');
 
         cy.get('.file-viewer').contains('file1.txt');
         const fileTgt = `${buildUrl(['sample', 'display_file'])}?dir=course_materials&path=${encodeURIComponent(defaultFilePath)}/option1/file1.txt`;
@@ -76,7 +82,10 @@ describe('Test cases revolving around course material uploading and access contr
         cy.get('#url_selection_radio').click();
         cy.get('#url_title').type('Test URL');
         cy.get('#url_url').type(buildUrl(['sample', 'users'], true));
+
+        cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
         cy.get('#submit-materials').click();
+        cy.wait('@courseMaterialsAdded');
 
         cy.get(`.file-viewer > [href="${buildUrl(['sample', 'users'],true)}"]`).click();
         cy.location().should((loc) => {
@@ -94,7 +103,10 @@ describe('Test cases revolving around course material uploading and access contr
         cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
         cy.get('#upload_picker').clear().type(date);
         cy.get('#upload1').attachFile(['file1.txt', 'file2.txt'] , { subjectType: 'drag-n-drop' });
+
+        cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
         cy.get('#submit-materials').click();
+        cy.wait('@courseMaterialsAdded');
 
         cy.get('#date_to_release_sd1f1').should('have.value', date);
         cy.get('#date_to_release_sd1f1').should('have.value', date);
@@ -234,7 +246,10 @@ describe('Test cases revolving around course material uploading and access contr
         cy.get('#upload1').attachFile(['file1.txt', 'file2.txt'] , { subjectType: 'drag-n-drop' });
         cy.get('#section-1').check();
         cy.get('#upload_picker').clear().type('2021-06-29 21:37:53');
+
+        cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
         cy.get('#submit-materials').click();
+        cy.wait('@courseMaterialsAdded');
 
         cy.reload();
         cy.get('.fa-pencil-alt').last().click();
@@ -257,11 +272,11 @@ describe('Test cases revolving around course material uploading and access contr
         const fileTgt2 = `${buildUrl(['sample', 'display_file'])}?dir=course_materials&path=${encodeURIComponent(defaultFilePath)}/file1.txt`;
 
         cy.visit(fileTgt2);
-        cy.wait(1000);
+        // not sure why this wait is necessary.  Perhaps the page just hasn't rendered completely?
+        cy.wait(500);
         cy.get('.content').contains('Reason: Your section may not access this file');
 
         cy.visit('/');
-        cy.wait(1000);
         cy.logout();
         cy.reload(true);
         cy.login();
@@ -283,7 +298,10 @@ describe('Test cases revolving around course material uploading and access contr
         cy.get('#section-1').check();
         cy.get('#upload_picker').clear().type('2021-06-29 21:37:53');
         cy.get('#expand-zip-checkbox').check();
+
+        cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
         cy.get('#submit-materials').click();
+        cy.wait('@courseMaterialsAdded');
 
         cy.reload();
         cy.get('[onclick=\'setCookie("foldersOpen",openAllDivForCourseMaterials());\']').click();
@@ -301,10 +319,10 @@ describe('Test cases revolving around course material uploading and access contr
         const fileTgt2 = `${buildUrl(['sample', 'display_file'])}?dir=course_materials&path=${encodeURIComponent(defaultFilePath)}/zip/1_1.txt`;
         cy.visit(fileTgt2);
 
-        cy.wait(1000);
+        // not sure why this wait is necessary.  Perhaps the page just hasn't rendered completely?
+        cy.wait(500);
         cy.get('.content').contains('Reason: Your section may not access this file');
         cy.visit('/');
-        cy.wait(1000);
         cy.logout();
         cy.reload(true);
 
@@ -320,36 +338,51 @@ describe('Test cases revolving around course material uploading and access contr
             cy.get('#input-provide-full-path').type('a');
             cy.get('#upload1').attachFile('file1.txt' , { subjectType: 'drag-n-drop' });
             cy.get('#upload_sort').clear().type('50000');
+            cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
             cy.get('#submit-materials').click();
+            cy.wait('@courseMaterialsAdded');
             cy.reload();
+            cy.wait('@courseMaterialsAdded');
 
             cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
             cy.get('#input-provide-full-path').type('a');
             cy.get('#upload1').attachFile('file2.txt' , { subjectType: 'drag-n-drop' });
             cy.get('#upload_sort').clear().type('10');
+            cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
             cy.get('#submit-materials').click();
+            cy.wait('@courseMaterialsAdded');
             cy.reload();
+            cy.wait('@courseMaterialsAdded');
 
             cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
             cy.get('#input-provide-full-path').type('a');
             cy.get('#upload1').attachFile('file3.txt' , { subjectType: 'drag-n-drop' });
             cy.get('#upload_sort').clear().type('5.5');
+            cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
             cy.get('#submit-materials').click();
+            cy.wait('@courseMaterialsAdded');
             cy.reload();
+            cy.wait('@courseMaterialsAdded');
 
             cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
             cy.get('#input-provide-full-path').type('a');
             cy.get('#upload1').attachFile('file4.txt' , { subjectType: 'drag-n-drop' });
             cy.get('#upload_sort').clear().type('5.4');
+            cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
             cy.get('#submit-materials').click();
+            cy.wait('@courseMaterialsAdded');
             cy.reload();
+            cy.wait('@courseMaterialsAdded');
 
             cy.get('[onclick="newUploadCourseMaterialsForm()"]').click();
             cy.get('#input-provide-full-path').type('a');
             cy.get('#upload1').attachFile('file5.txt' , { subjectType: 'drag-n-drop' });
             cy.get('#upload_sort').clear().type('0');
+            cy.intercept(buildUrl(['sample', 'course_materials'])).as('courseMaterialsAdded');
             cy.get('#submit-materials').click();
+            cy.wait('@courseMaterialsAdded');
             cy.reload(true);
+            cy.wait('@courseMaterialsAdded');
             cy.get('[onclick=\'setCookie("foldersOpen",openAllDivForCourseMaterials());\']').click();
 
 
