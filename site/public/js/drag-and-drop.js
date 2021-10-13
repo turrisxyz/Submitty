@@ -981,6 +981,9 @@ function handleSubmission(days_late, days_to_be_charged,late_days_allowed, versi
             return;
         }
 
+        console.log(file_array);
+        return;
+
         // Files selected
         for (var i = 0; i < file_array.length; i++) {
             for (var j = 0; j < file_array[i].length; j++) {

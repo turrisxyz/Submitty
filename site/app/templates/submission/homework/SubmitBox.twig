@@ -114,10 +114,10 @@
 	                    <i title="Split by QR Code Help" class="far fa-question-circle"></i></a>
                     </span>
 
-                    <label id="pages-prompt" for="num_pages">Split by Page Count:</label>
-                    <input type="number" id= "num_pages" placeholder="required"/>
-                    <input type="text" id="qr_prefix" placeholder="Prefix (optional)" aria-label="QR Prefix (Optional)" />
-                    <input type="text" id="qr_suffix" placeholder="Suffix (optional)" aria-label="QR Suffix (Optional)" />
+                    <label id="pages-prompt" for="num-pages">Split by Page Count:</label>
+                    <input type="number" id= "num-pages" placeholder="required"/>
+                    <input type="text" id="qr-prefix" placeholder="Prefix (optional)" aria-label="QR Prefix (Optional)" />
+                    <input type="text" id="qr-suffix" placeholder="Suffix (optional)" aria-label="QR Suffix (Optional)" />
                     <div id="expected-num-box">
                         <label for= "expected-pages-input"> Expected Number of pages per PDF: </label>
                         <input id= "expected-pages-input" placeholder="e.g. 1-5, 8, 11-13" onchange="highlightPageCount()" />
@@ -129,121 +129,116 @@
         <script>
             $(function() {
                 students_full = {{ students_full|json_encode|raw }};
-                $('#qr_prefix').prop('hidden', true);
-                $('#qr_suffix').prop('hidden', true);
-                $('#prefix-prompt').prop('hidden', true);
-                $('#bulk_progress_box').prop('hidden', true);
-                $('#expected-num-box').prop('hidden', true);
-
+               
                 //load what upload mode the user selected (if any)
-                if(sessionStorage.getItem('radio-bulk')){
-                    $('#radio-bulk').prop('checked', true);
-                    $('#bulk_progress_box').prop('hidden', false);
-                }
-                else if(sessionStorage.getItem('radio-student')){
-                    $('#radio-student').prop('checked',true);
-                }
-                else{
-                    $('#radio-normal').prop('checked',true);
-                }
+                // if(sessionStorage.getItem('radio-bulk')){
+                //     $('#radio-bulk').prop('checked', true);
+                //     $('#bulk_progress_box').prop('hidden', false);
+                // }
+                // else if(sessionStorage.getItem('radio-student')){
+                //     $('#radio-student').prop('checked',true);
+                // }
+                // else{
+                //     $('#radio-normal').prop('checked',true);
+                // }
                 //load if bulkupload with qr codes selected or not
-                if(sessionStorage.getItem('use-qr')){
-                    $('#qr_prefix').prop('hidden',false)
-                    $('#qr_suffix').prop('hidden',false)
-                    $('#prefix-prompt').prop('hidden', false);
-                    $('#pages-prompt').prop('hidden', true);
-                    $('#num_pages').prop('hidden', true);
-                    $('#use-qr').prop('checked',true);
-                    $('#expected-num-box').prop('hidden', false);
-                    $('#use-ocr').prop('hidden', false);
-                    $('#use-ocr-id').prop('hidden', false);
-                    //populate prefix textarea
-                    if(sessionStorage.getItem('qr_prefix')){
-                        $('#qr_prefix').val(sessionStorage.getItem('qr_prefix'));
-                    }
-                    if(sessionStorage.getItem('qr_suffix')){
-                        $('#qr_suffix').val(sessionStorage.getItem('qr_suffix'));
-                    }
-                    if(sessionStorage.getItem('use-ocr')){
-                        $('#use-ocr').prop('checked', true);
-                    }
-                }
-                if ($("#radio-student").is(":checked")) {
-                    $('#user-id-input').show();
-                }
-                if ($("#radio-bulk").is(":checked")) {
-                    $('#pdf-submit-button').show();
-                    $('#bulk_progress_box').prop('hidden', false);
-                }
-                else{
-                     $('#bulk_progress_box').prop('hidden', true);
-                }
-                if($('#use-qr').is(':checked')){
-                    //save qr_code prefix on textarea change
-                    $('#qr_prefix').change(function(){
-                        sessionStorage.setItem('qr_prefix', $('#qr_prefix').val());
-                    });
-                    $('#qr_suffix').change(function(){
-                        sessionStorage.setItem('qr_suffix', $('#qr_suffix').val());
-                    });
+                // if(sessionStorage.getItem('use-qr')){
+                //     $('#qr_prefix').prop('hidden',false)
+                //     $('#qr_suffix').prop('hidden',false)
+                //     $('#prefix-prompt').prop('hidden', false);
+                //     $('#pages-prompt').prop('hidden', true);
+                //     $('#num_pages').prop('hidden', true);
+                //     $('#use-qr').prop('checked',true);
+                //     $('#expected-num-box').prop('hidden', false);
+                //     $('#use-ocr').prop('hidden', false);
+                //     $('#use-ocr-id').prop('hidden', false);
+                //     //populate prefix textarea
+                //     if(sessionStorage.getItem('qr_prefix')){
+                //         $('#qr_prefix').val(sessionStorage.getItem('qr_prefix'));
+                //     }
+                //     if(sessionStorage.getItem('qr_suffix')){
+                //         $('#qr_suffix').val(sessionStorage.getItem('qr_suffix'));
+                //     }
+                //     if(sessionStorage.getItem('use-ocr')){
+                //         $('#use-ocr').prop('checked', true);
+                //     }
+                // }
+                // if ($("#radio-student").is(":checked")) {
+                //     $('#user-id-input').show();
+                // }
+                // if ($("#radio-bulk").is(":checked")) {
+                //     $('#pdf-submit-button').show();
+                //     $('#bulk_progress_box').prop('hidden', false);
+                // }
+                // else{
+                //      $('#bulk_progress_box').prop('hidden', true);
+                // }
+                // if($('#use-qr').is(':checked')){
+                //     //save qr_code prefix on textarea change
+                //     $('#qr_prefix').change(function(){
+                //         sessionStorage.setItem('qr_prefix', $('#qr_prefix').val());
+                //     });
+                //     $('#qr_suffix').change(function(){
+                //         sessionStorage.setItem('qr_suffix', $('#qr_suffix').val());
+                //     });
 
-                    $('#use-ocr').prop('hidden', false);
-                    $('#use-ocr-id').prop('hidden', false);
+                //     $('#use-ocr').prop('hidden', false);
+                //     $('#use-ocr-id').prop('hidden', false);
 
-                    if(sessionStorage.getItem('use-ocr'))
-                        $('#use-ocr').prop('checked', true);
-                    else
-                        $('#use-ocr').prop('checked', false);
-                }
-                $('#radio-normal').click(function() {
-                    sessionStorage.setItem('radio-normal', true);
-                    sessionStorage.removeItem('radio-student');
-                    sessionStorage.removeItem('radio-bulk');
-                    $('#pdf-submit-button').hide();
-                    $('#user-id-input').hide();
-                    $('#pdf-submit-button').hide();
-                    $('#user_id').val('');
-                    $('#bulk_progress_box').prop('hidden', true);
-                });
-                $('#radio-student').click(function() {
-                    sessionStorage.setItem('radio-student', true);
-                    sessionStorage.removeItem('radio-bulk');
-                    sessionStorage.removeItem('radio-normal');
-                    $('#pdf-submit-button').hide();
-                    $('#user-id-input').show();
-                    $('#bulk_progress_box').prop('hidden', true);
-                });
-                $('#radio-bulk').click(function()  {
-                    sessionStorage.setItem('radio-bulk', true);
-                    sessionStorage.removeItem('radio-student');
-                    sessionStorage.removeItem('radio-normal');
-                    $('#user-id-input').hide();
-                    $('#pdf-submit-button').show();
-                    $('#user_id').val('');
-                    $('#bulk_progress_box').prop('hidden', false);
-                });
-                $('#use-qr').click(function(){
-                    (sessionStorage.getItem('use-qr')) ? sessionStorage.removeItem('use-qr') : sessionStorage.setItem('use-qr', true);
-                    $('#num_pages').prop('hidden', !$('#num_pages').is(':hidden'));
-                    $('#qr_prefix').prop('hidden', !$('#qr_prefix').is(':hidden'));
-                    $('#qr_suffix').prop('hidden', !$('#qr_suffix').is(':hidden'));
-                    $('#prefix-prompt').prop('hidden', !$('#prefix-prompt').is(':hidden'));
-                    $('#pages-prompt').prop('hidden', !$('#pages-prompt').is(':hidden'));
-                    $('#expected-num-box').prop('hidden',!$('#expected-num-box').is(':hidden'));
+                //     if(sessionStorage.getItem('use-ocr'))
+                //         $('#use-ocr').prop('checked', true);
+                //     else
+                //         $('#use-ocr').prop('checked', false);
+                // }
+                // $('#radio-normal').click(function() {
+                //     sessionStorage.setItem('radio-normal', true);
+                //     sessionStorage.removeItem('radio-student');
+                //     sessionStorage.removeItem('radio-bulk');
+                //     $('#pdf-submit-button').hide();
+                //     $('#user-id-input').hide();
+                //     $('#pdf-submit-button').hide();
+                //     $('#user_id').val('');
+                //     $('#bulk_progress_box').prop('hidden', true);
+                // });
+                // $('#radio-student').click(function() {
+                //     sessionStorage.setItem('radio-student', true);
+                //     sessionStorage.removeItem('radio-bulk');
+                //     sessionStorage.removeItem('radio-normal');
+                //     $('#pdf-submit-button').hide();
+                //     $('#user-id-input').show();
+                //     $('#bulk_progress_box').prop('hidden', true);
+                // });
+                // $('#radio-bulk').click(function()  {
+                //     sessionStorage.setItem('radio-bulk', true);
+                //     sessionStorage.removeItem('radio-student');
+                //     sessionStorage.removeItem('radio-normal');
+                //     $('#user-id-input').hide();
+                //     $('#pdf-submit-button').show();
+                //     $('#user_id').val('');
+                //     $('#bulk_progress_box').prop('hidden', false);
+                // });
+                // $('#use-qr').click(function(){
+                //     (sessionStorage.getItem('use-qr')) ? sessionStorage.removeItem('use-qr') : sessionStorage.setItem('use-qr', true);
+                //     $('#num_pages').prop('hidden', !$('#num_pages').is(':hidden'));
+                //     $('#qr_prefix').prop('hidden', !$('#qr_prefix').is(':hidden'));
+                //     $('#qr_suffix').prop('hidden', !$('#qr_suffix').is(':hidden'));
+                //     $('#prefix-prompt').prop('hidden', !$('#prefix-prompt').is(':hidden'));
+                //     $('#pages-prompt').prop('hidden', !$('#pages-prompt').is(':hidden'));
+                //     $('#expected-num-box').prop('hidden',!$('#expected-num-box').is(':hidden'));
 
-                    if(!$('#use-qr').is(":checked")){
-                        $('#use-ocr').prop('checked', false);
-                    }
-                });
-                $('#use-ocr').click(function(){
-                    sessionStorage.getItem('use-ocr') ? sessionStorage.removeItem('use-ocr') :
-                        sessionStorage.setItem('use-ocr', true);
+                //     if(!$('#use-qr').is(":checked")){
+                //         $('#use-ocr').prop('checked', false);
+                //     }
+                // });
+                // $('#use-ocr').click(function(){
+                //     sessionStorage.getItem('use-ocr') ? sessionStorage.removeItem('use-ocr') :
+                //         sessionStorage.setItem('use-ocr', true);
 
-                    if( $('#use-qr').is(":checked") !== $('#use-ocr').is(":checked") ){
-                        $('#use-qr').click();
-                    }
+                //     if( $('#use-qr').is(":checked") !== $('#use-ocr').is(":checked") ){
+                //         $('#use-qr').click();
+                //     }
 
-                });
+                // });
                 $("#user_id").autocomplete({
                     source: students_full
                 });
@@ -409,15 +404,19 @@
             // GET FILES OF THE HIGHEST VERSION
             if (assignment_version == highest_version && highest_version > 0) {
                 $("#getprev").click(function(e){
-                    $("#startnew").click();
-                    {% for file in old_files %}
-                        addLabel('{{ file.name }}', '{{ file.size }}', {{ file.part }}, true);
-                        readPrevious('{{ file.name }}', {{ file.part }});
-                    {% endfor %}
-                    setUsePrevious();
-                    setButtonStatus();
-                    e.stopPropagation();
+                    loadPreviousFilesOnDropBoxes();
                 });
+            }
+
+
+            function loadPreviousFilesOnDropBoxes(){
+                $("#startnew").click();
+                {% for file in old_files %}
+                    addLabel('{{ file.name }}', '{{ file.size }}', {{ file.part }}, true);
+                    readPrevious('{{ file.name }}', {{ file.part }});
+                {% endfor %}
+                setUsePrevious();
+                setButtonStatus();
             }
         </script>
     {% endif %}
@@ -429,6 +428,10 @@
 {% endif %}
 
 <script>
+    const num_submission_boxes = {{ part_names | length }};
+    const max_file_size = {{ max_file_size }};
+    const max_post_size = {{ max_post_size }};
+
     function makeSubmission(user_id, highest_version, is_pdf, path, git_user_id, git_repo_id, merge_previous=false, clobber=false) {
         // submit the selected pdf
         path = decodeURIComponent(path);
@@ -487,19 +490,7 @@
             if ($('#radio-student').is(':checked')) {
                 user_id = $("#user_id").val();
             };
-            if ($('#radio-bulk').is(':checked')) {
-                num_pages = $("#num_pages").val();
-                use_qr = $("#use-qr").is(":checked");
-                use_ocr = $('#use-ocr').is(":checked");
-                qr_prefix = $('#qr_prefix').val();
-                qr_suffix = $('#qr_suffix').val();
-                if($('#use-qr').is(':checked')){
-                    if(!sessionStorage.getItem('qr_prefix'))
-                        sessionStorage.setItem('qr_prefix', qr_prefix );
-                    if(!sessionStorage.getItem('qr_suffix'))
-                        sessionStorage.setItem('qr_suffix', qr_suffix );
-                }
-            };
+            
             // vcs upload
             var git_user_id = "";
             var git_repo_id = "";
@@ -507,17 +498,9 @@
                 git_user_id = $("#github-user-id").val();
                 git_repo_id = $("#github-repo-id").val();
             }
-            // bulk upload
-            if ($("#radio-bulk").is(":checked")) {
-                handleBulk("{{ gradeable_id }}",
-                            {{ max_file_size }},
-                            {{ max_post_size }},
-                            num_pages, use_qr,
-                            use_ocr, qr_prefix, qr_suffix
-                          );
-            }
+            
             // no user id entered, upload for whoever is logged in
-            else if (user_id == ""){
+            else if (user_id == "" && !$("#radio-bulk").is(":checked")){
                 makeSubmission(user_id, {{ highest_version }}, false, "", git_user_id, git_repo_id);
             }
             // user id entered, need to validate first
