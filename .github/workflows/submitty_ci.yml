@@ -459,7 +459,9 @@ jobs:
               working-directory: ${{env.SUBMITTY_REPOSITORY}}/site
               browser: chrome
               headless: true
-              env: run_area=CI
+              env: 
+                run_area=CI
+                DEBUG=cypress:server:util:process_profiler
 
           - name: Stop autograding services
             run: |
@@ -474,7 +476,9 @@ jobs:
               working-directory: ${{env.SUBMITTY_REPOSITORY}}/site
               browser: chrome
               headless: true
-              env: autograding_shipper_off=True
+              env: 
+                autograding_shipper_off=True
+                DEBUG=cypress:server:util:process_profiler
           
           - name: Restart autograding shipper
             run: |
@@ -488,7 +492,9 @@ jobs:
               working-directory: ${{env.SUBMITTY_REPOSITORY}}/site
               browser: chrome
               headless: true
-              env: autograding_shipper_off=True
+              env: 
+                autograding_shipper_off=True
+                DEBUG=cypress:server:util:process_profiler
 
           - name: Restart autograding worker
             run: |
@@ -505,6 +511,7 @@ jobs:
               working-directory: ${{env.SUBMITTY_REPOSITORY}}/site
               browser: chrome
               headless: true
+              env: DEBUG=cypress:server:util:process_profiler
 
           - uses: actions/upload-artifact@v2
             if: failure()
