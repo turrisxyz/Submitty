@@ -47,7 +47,7 @@ fi
 
 #Ensure that tables exist within Submitty Master DB.
 sql="SELECT count(*) FROM pg_tables WHERE schemaname='public' AND tablename IN ('terms','courses','courses_users','sessions','users');"
-table_count=`PGPASSWORD=${DATABASE_PASS} psql ${CONN_STRING} -d submitty -tAc "${sql}"`
+time table_count=`PGPASSWORD=${DATABASE_PASS} psql ${CONN_STRING} -d submitty -tAc "${sql}"`
 if [[ $table_count -ne "5" ]] ; then
     echo "ERROR: Submitty Master DB is invalid."
     exit
@@ -271,7 +271,7 @@ create_and_set  u=rwx,g=rwxs,o=  $PHP_USER     $ta_www_group   $course_dir/repor
 ########################################################################################################################
 
 # copy the build_course.sh script
-cp $SUBMITTY_INSTALL_DIR/sbin/build_course.sh $course_dir/BUILD_${course}.sh
+time cp $SUBMITTY_INSTALL_DIR/sbin/build_course.sh $course_dir/BUILD_${course}.sh
 chown $instructor:$ta_www_group $course_dir/BUILD_${course}.sh
 chmod 770 $course_dir/BUILD_${course}.sh
 replace_fillin_variables $course_dir/BUILD_${course}.sh
@@ -296,7 +296,7 @@ if [[ $? -ne "0" ]] ; then
     echo "ERROR: Failed to create tables within database ${DATABASE_NAME}"
     exit
 fi
-PGPASSWORD=${DATABASE_PASS} psql ${CONN_STRING} -d submitty -c "INSERT INTO courses (semester, course, group_name, owner_name)
+time PGPASSWORD=${DATABASE_PASS} psql ${CONN_STRING} -d submitty -c "INSERT INTO courses (semester, course, group_name, owner_name)
 VALUES ('${semester}', '${course}', '${ta_www_group}', '${instructor}');"
 if [[ $? -ne "0" ]] ; then
     echo "ERROR: Failed to add this course to the master Submitty database."
