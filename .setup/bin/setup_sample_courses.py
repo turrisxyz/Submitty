@@ -39,6 +39,8 @@ from submitty_utils import dateutils
 from ruamel.yaml import YAML
 from sqlalchemy import create_engine, Table, MetaData, bindparam, select, join, func
 
+import time
+
 yaml = YAML(typ='safe')
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -142,6 +144,8 @@ def main():
     submitty_conn = submitty_engine.connect()
     submitty_metadata = MetaData(bind=submitty_engine)
     user_table = Table('users', submitty_metadata, autoload=True)
+
+    start_time = time.time()
     for user_id in sorted(users.keys()):
         user = users[user_id]
         submitty_conn.execute(user_table.insert(),
@@ -189,6 +193,7 @@ def main():
                           start_date = term_start,
                           end_date   = term_end)
 
+    print("took >>> ", time.time() - start_time)
     submitty_conn.close()
 
     for course_id in sorted(courses.keys()):
@@ -733,7 +738,7 @@ class Course(object):
         add_to_group(course_group, "submitty_php")
         add_to_group(course_group, "submitty_daemon")
         add_to_group(course_group, "submitty_cgi")
-        os.system("{}/sbin/create_course.sh {} {} {} {}"
+        os.system("time {}/sbin/create_course.sh {} {} {} {}"
                   .format(SUBMITTY_INSTALL_DIR, self.semester, self.code, self.instructor.id,
                           course_group))
 
