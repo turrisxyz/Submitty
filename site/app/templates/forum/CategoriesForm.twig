@@ -1,15 +1,20 @@
 {% extends 'generic/Popup.twig' %}
 {% block popup_id %}category-list{% endblock %}
-{% block title %}Categories{% endblock %}
+{% block title %}Manage Categories{% endblock %}
 {% block body %}
-  {% include "forum/ShowCategories.twig" %}
+    {% include "forum/ShowCategories.twig" with {
+        "categories": categories,
+        "category_colors": category_colors,
+        "csrf_token": csrf_token,
+        "search_url": search_url
+    } %}
 {% endblock %}
 {% block form %}
+  <form method="post" id="catergories_form" action="{{search_url}}/update_categories">
     {{ parent() }}
+  </form>
 {% endblock %}
-
-{% block close_click_action %}$('#ui-category-list').find('.fa-times').click();$('#category-list').css('display', 'none');{% endblock %}
-{% block close_button_classes %}float-right{% endblock %}
 {% block buttons %}
-    {{ block('close_button') }}
+  {{ block('close_button') }}
+  <button id="save_categories" type="submit" class="btn btn-primary">Save</button>
 {% endblock %}

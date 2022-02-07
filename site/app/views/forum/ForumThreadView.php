@@ -242,6 +242,7 @@ class ForumThreadView extends AbstractView {
 
             $return = $this->core->getOutput()->renderTwigTemplate("forum/ShowForumThreads.twig", [
                 "categories" => $categories,
+                "category_colors" => [], // todo
                 "filterFormData" => $filterFormData,
                 "button_params" => $button_params,
                 "thread_exists" => $threadExists,
@@ -1235,7 +1236,7 @@ class ForumThreadView extends AbstractView {
             "thread_exists" => $thread_exists
         ];
 
-        return $this->core->getOutput()->renderTwigTemplate("forum/ShowCategories.twig", [
+        return $this->core->getOutput()->renderTwigTemplate("forum/CategoriesForm.twig", [
             "categories" => $categories,
             "category_colors" => $category_colors,
             "forumBarData" => $forumBarData,

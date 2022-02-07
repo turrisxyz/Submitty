@@ -1,5 +1,12 @@
 {% set user_group = core.getUser().getGroup() %}
 
+{% include 'forum/CategoriesForm.twig' with {
+	"categories": categories,
+	"category_colors": category_colors,
+	"csrf_token": csrf_token,
+	"search_url": search_url
+} %}
+
 {% if show_more is defined and show_more %}
 	<script>
 
@@ -93,7 +100,7 @@
 					{% endfor %}
 					{% if core.getUser().accessGrading() %}
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="{{ manage_categories_url }}" title="Edit Forum Categories" >Edit Categories</a>
+						<a class="dropdown-item" title="Edit Forum Categories" onclick="$('#category-list').show()">Edit Categories</a>
 					{% endif %}
 					{% if thread_exists and (is_full_threads_page is not defined or not is_full_threads_page) %}
 						<div class="dropdown-divider"></div>
