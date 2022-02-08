@@ -1044,16 +1044,6 @@ class ForumController extends AbstractController {
     }
 
     private function getAllowedCategoryColor() {
-        // $colors = [];
-        // $colors["MAROON"]   = "#800000";
-        // $colors["OLIVE"]    = "#808000";
-        // $colors["GREEN"]    = "#008000";
-        // $colors["TEAL"]     = "#008080";
-        // $colors["NAVY"]     = "#000080";
-        // $colors["PURPLE"]   = "#800080";
-        // $colors["GRAY"]     = "#808080";
-        // $colors["BLACK"]    = "#000000";
-        // return $colors;
         return ColorUtils::COLORS;
     }
 
