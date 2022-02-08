@@ -1209,7 +1209,6 @@ class ForumThreadView extends AbstractView {
         $this->core->getOutput()->addInternalCss('forum.css');
 
         $categories = "";
-        $category_colors;
 
         if ($this->core->getUser()->accessGrading()) {
             $categories = $this->core->getQueries()->getCategories();
