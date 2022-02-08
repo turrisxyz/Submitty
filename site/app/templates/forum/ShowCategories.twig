@@ -30,8 +30,8 @@
         <ul id="ui-category-list" style="padding-left: 0em;">
             {# TODO: scrollbar #}
             {% for category in categories %}
-                <li id="categorylistitem-{{ category.category_id }}" 
-                    class="category-sortable category-item-box" 
+                <li id="categorylistitem-{{ category.category_id }}"
+                    class="category-sortable category-item-box"
                     style="color: {{ category.color }};"
                     data-category_desc="{{ category.category_desc }}"
                     data-category_id="{{ category.category_id }}"
@@ -76,7 +76,7 @@
         function getItem(input) {
             return $(input).closest('.category-item-box');
         }
-        
+
         $(".delete-category-button").click(function() {
             const item = getItem(this);
             const category_id = item.data('category_id');

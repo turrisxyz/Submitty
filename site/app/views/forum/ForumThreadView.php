@@ -1160,8 +1160,6 @@ class ForumThreadView extends AbstractView {
 
         $categories = "";
 
-        $category_colors;
-
         $categories = $this->core->getQueries()->getCategories();
         $create_thread_message = $this->core->getConfig()->getForumCreateThreadMessage();
 

@@ -9,6 +9,7 @@ use app\controllers\AbstractController;
 use app\libraries\Utils;
 use app\libraries\FileUtils;
 use app\libraries\DateUtils;
+use app\libraries\ColorUtils;
 use app\libraries\routers\AccessControl;
 use app\libraries\routers\Enabled;
 use app\libraries\response\JsonResponse;
@@ -181,7 +182,7 @@ class ForumController extends AbstractController {
                     return $this->core->getOutput()->renderJsonFail("Category name is more than 50 characters.");
                 }
                 else {
-                    $newCategoryId = $this->core->getQueries()->addNewCategory($category, $_POST["rank"]);
+                    $newCategoryId = $this->core->getQueries()->addNewCategory($category, $_POST["rank"], array_values($this->getAllowedCategoryColor())[0]);
                     $result["new_id"] = $newCategoryId["category_id"];
                 }
             }
@@ -190,7 +191,7 @@ class ForumController extends AbstractController {
             $result["new_ids"] = [];
             foreach ($category as $categoryName) {
                 if (!$this->isValidCategories(-1, [$categoryName])) {
-                    $newCategoryId = $this->core->getQueries()->addNewCategory($categoryName, $_POST["rank"]);
+                    $newCategoryId = $this->core->getQueries()->addNewCategory($categoryName, $_POST["rank"], array_values($this->getAllowedCategoryColor())[0]);
                     $result["new_ids"][] = $newCategoryId;
                 }
             }
@@ -248,8 +249,8 @@ class ForumController extends AbstractController {
         }
         if (!empty($_POST["category_color"])) {
             $category_color = $_POST["category_color"];
-            if (!in_array(strtoupper($category_color), $this->getAllowedCategoryColor())) {
-                return $this->core->getOutput()->renderJsonFail("Given category color is not allowed.");
+            if (!in_array($category_color, array_values($this->getAllowedCategoryColor()))) {
+                return $this->core->getOutput()->renderJsonFail("Given category color {$category_color} is not allowed.");
             }
         }
 
@@ -1043,16 +1044,17 @@ class ForumController extends AbstractController {
     }
 
     private function getAllowedCategoryColor() {
-        $colors = [];
-        $colors["MAROON"]   = "#800000";
-        $colors["OLIVE"]    = "#808000";
-        $colors["GREEN"]    = "#008000";
-        $colors["TEAL"]     = "#008080";
-        $colors["NAVY"]     = "#000080";
-        $colors["PURPLE"]   = "#800080";
-        $colors["GRAY"]     = "#808080";
-        $colors["BLACK"]    = "#000000";
-        return $colors;
+        // $colors = [];
+        // $colors["MAROON"]   = "#800000";
+        // $colors["OLIVE"]    = "#808000";
+        // $colors["GREEN"]    = "#008000";
+        // $colors["TEAL"]     = "#008080";
+        // $colors["NAVY"]     = "#000080";
+        // $colors["PURPLE"]   = "#800080";
+        // $colors["GRAY"]     = "#808080";
+        // $colors["BLACK"]    = "#000000";
+        // return $colors;
+        return ColorUtils::COLORS;
     }
 
     /**

@@ -2150,7 +2150,7 @@ function sendAnnouncement(id){
     data: {"id": id, 'csrf_token': window.csrfToken},
     success: function(data){
         try {
-            if (JSON.parse(data).status === "success"){ 
+            if (JSON.parse(data).status === "success"){
                 pinAnnouncement(id, 1, window.csrfToken);
                 window.location.reload();
             }
