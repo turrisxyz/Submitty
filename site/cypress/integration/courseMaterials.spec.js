@@ -3,6 +3,8 @@ import {skipOn} from '@cypress/skip-test';
 
 describe('Test cases revolving around course material uploading and access control', () => {
     before(() => {
+        // This test should fail
+        cy.get('sjldjhflksdajhflsdkjhfalskdjhflasdkjfhlaksdjfhlaksjdhflkajdfhlkasjdhfalksjdhflakdsjfhalkj')
         cy.visit('/');
         cy.login();
         cy.wait(500);
